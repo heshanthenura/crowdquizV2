@@ -33,7 +33,7 @@ export default function NavBar() {
           <Link href={'#'}>Home</Link>
           <Link href={'#'}>Quizzes</Link>
           <Link href={'#'}>Contact</Link>
-          <Link href={'#'}>About</Link>
+          <Link href={'/about'}>About</Link>
 
           <button className='!bg-[#0059FF] !text-white rounded-md w-[90px] py-[3px]'>Login</button>
           <button className='!bg-[#0059FF] !text-white rounded-md w-[90px] py-[3px] '>
