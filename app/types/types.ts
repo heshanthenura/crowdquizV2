@@ -9,3 +9,15 @@ export type QuizPreviewCardType = {
   author_email: string;
   author_name: string;
 };
+
+export type QuizDetailsType = {
+  id: number;
+  created_at: string;
+  title: string;
+  description: string;
+  number_of_questions: string;
+  quiz_type: string;
+  time: string;
+  author_email: string;
+  author_name: string;
+};
