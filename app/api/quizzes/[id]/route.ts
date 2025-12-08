@@ -3,7 +3,7 @@ import { supabase } from "@/app/utils/supabase";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
 
