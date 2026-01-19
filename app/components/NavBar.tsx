@@ -1,12 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { BookOpen, LogIn, LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function NavBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [, startTransition] = useTransition();
+  const { user, loading, signInWithGoogle, signOut } = useAuth();
 
   const isActive = (path: string) => pathname === path;
 
@@ -16,6 +19,32 @@ export default function NavBar() {
     { href: "/create", label: "Create Quiz" },
     { href: "/about", label: "About" },
   ];
+
+  useEffect(() => {
+    startTransition(() => {
+      setOpen(false);
+    });
+  }, [pathname]);
+
+  const authButton = (
+    <button
+      className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-60"
+      onClick={user ? signOut : signInWithGoogle}
+      disabled={loading}
+    >
+      {user ? (
+        <>
+          <LogOut className="w-4 h-4" />
+          Logout
+        </>
+      ) : (
+        <>
+          <LogIn className="w-4 h-4" />
+          Login with Google
+        </>
+      )}
+    </button>
+  );
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -43,20 +72,7 @@ export default function NavBar() {
                 {label}
               </Link>
             ))}
-            <button className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              {/* replace true with your auth state if needed */}
-              {true ? (
-                <>
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </>
-              ) : (
-                <>
-                  <LogIn className="w-4 h-4" />
-                  Login
-                </>
-              )}
-            </button>
+            {authButton}
           </div>
 
           {/* Mobile toggle */}
@@ -87,19 +103,7 @@ export default function NavBar() {
                 {label}
               </Link>
             ))}
-            <button className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              {true ? (
-                <>
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </>
-              ) : (
-                <>
-                  <LogIn className="w-4 h-4" />
-                  Login
-                </>
-              )}
-            </button>
+            <div>{authButton}</div>
           </div>
         </div>
       )}
