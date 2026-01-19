@@ -1,8 +1,24 @@
+"use client";
 import NavBar from "@/app/components/NavBar";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 
 export default function Home() {
+  const [quizzes, setQuizzes] = useState<QuizPreviewCard[]>([]);
+
+  useEffect(() => {
+    const getRecentQuizzes = async () => {
+      const response = await fetch(origin + "/api/quiz/recent");
+      const data = await response.json();
+      console.log(data);
+      setQuizzes(data);
+    };
+
+    getRecentQuizzes();
+  }, []);
+
   return (
     <div>
       <NavBar />
@@ -43,43 +59,11 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentQuizzes.map((quiz) => (
-              <Link
-                key={quiz.id}
-                to={`/quiz/${quiz.id}`}
-                className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-200 group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">
-                    {quiz.type}
-                  </div>
-                  <span className="text-xs text-gray-500">
-                    {quiz.createdAt}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                  {quiz.title}
-                </h3>
-
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {quiz.description}
-                </p>
-
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{quiz.duration} min</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FileQuestion className="w-4 h-4" />
-                    <span>{quiz.numberOfQuestions} questions</span>
-                  </div>
-                </div>
-              </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {quizzes.map((quiz) => (
+              <QuizPreviewCard key={quiz.id} quiz={quiz} />
             ))}
-          </div> */}
+          </div>
         </div>
       </section>
       <section className="bg-white py-16 border-t border-gray-200">
