@@ -16,9 +16,9 @@ export default function NavBar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/quizzes", label: "Quizzes" },
-    { href: "/create", label: "Create Quiz" },
+    { href: "/create", label: "Create Quiz", requireAuth: true },
     { href: "/about", label: "About" },
-  ];
+  ].filter((link) => !link.requireAuth || user);
 
   useEffect(() => {
     startTransition(() => {
