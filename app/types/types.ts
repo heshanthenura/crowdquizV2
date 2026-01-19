@@ -7,3 +7,12 @@ type QuizPreviewCard = {
   number_of_questions: number;
   time: number;
 };
+
+type QuizListResponse = {
+  page: number;
+  limit: number;
+  totalPages: number;
+  totalCount: number;
+  data: QuizPreviewCard[];
+  error: string;
+};
