@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       const optionsData = question.answers.map((answer: MCQOptionType) => ({
         question_id: questionId,
         option: answer.option,
-        is_correct: answer.isCorrect,
+        is_correct: answer.is_correct,
       }));
 
       const { error: optionsError } = await supabaseAdmin

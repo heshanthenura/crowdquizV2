@@ -20,9 +20,9 @@ export type QuizListResponseType = {
 export type MCQOptionType = {
   id: number;
   created_at: Date;
-  questions_id: number;
+  question_id: number;
   option: string;
-  isCorrect: boolean;
+  is_correct: boolean;
 };
 
 export type MCQQuestionType = {

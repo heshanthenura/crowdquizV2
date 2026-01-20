@@ -205,9 +205,9 @@ export default function AddQuizzesPage() {
             </div>
 
             <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <div className="block text-sm font-medium text-gray-700 mb-3">
                 Quiz Type
-              </label>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="relative">
                   <input
@@ -305,9 +305,9 @@ export default function AddQuizzesPage() {
             </div>
 
             <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <div className="block text-sm font-medium text-gray-700 mb-3">
                 Share Options (Optional)
-              </label>
+              </div>
               <div className="flex gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                   <Facebook className="w-4 h-4 text-blue-600" />
