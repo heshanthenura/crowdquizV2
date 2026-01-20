@@ -237,18 +237,22 @@ export default function QuizPage({
                         let answerClassName: string;
                         let labelText = "";
 
-                        if (isCorrect && isUserAnswer) {
+                        if (isUserAnswer && isCorrect) {
                           answerClassName =
                             "bg-green-50 border-green-300 text-green-900";
-                          labelText = "✓";
-                        } else if (isCorrect && isUnanswered) {
-                          answerClassName =
-                            "bg-yellow-50 border-yellow-300 text-yellow-900";
-                          labelText = "✓";
-                        } else if (isUserAnswer) {
+                          labelText = "✓ Correct";
+                        } else if (isUserAnswer && !isCorrect) {
                           answerClassName =
                             "bg-red-50 border-red-300 text-red-900";
-                          labelText = "✗";
+                          labelText = "✗ Your answer";
+                        } else if (isUnanswered && isCorrect) {
+                          answerClassName =
+                            "bg-yellow-50 border-yellow-300 text-yellow-900";
+                          labelText = "✓ Correct answer";
+                        } else if (isCorrect) {
+                          answerClassName =
+                            "bg-green-50 border-green-300 text-green-900";
+                          labelText = "✓ Correct answer";
                         } else {
                           answerClassName =
                             "bg-gray-50 border-gray-200 text-gray-600";
