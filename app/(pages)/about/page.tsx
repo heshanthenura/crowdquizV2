@@ -3,7 +3,7 @@ import { Github, Instagram, Linkedin, Youtube } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <NavBar />
       <div className="bg-gray-100 min-h-screen py-12">
         <div className=" max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,6 +128,6 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

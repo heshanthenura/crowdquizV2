@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
         "id,title,description,quiz_type,number_of_questions,time, created_at::date",
         { count: "exact" },
       )
-      .ilike("title", `%${query}%`)
+      .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
       .order("created_at", { ascending: false })
       .range(from, to);
 

@@ -1,13 +1,13 @@
 import { Clock, FileQuestion } from "lucide-react";
 import Link from "next/link";
-
+import { type QuizPreviewCard } from "@/app/types/types";
 export default function QuizPreviewCard({
   quiz,
 }: Readonly<{ quiz: QuizPreviewCard }>) {
   return (
     <Link
       key={quiz.id}
-      href={`/quiz/${quiz.id}`}
+      href={`/quizzes/${quiz.id}`}
       className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-200 group"
     >
       <div className="flex items-start justify-between mb-4">
