@@ -1,9 +1,9 @@
 import { Clock, FileQuestion } from "lucide-react";
 import Link from "next/link";
-import { type QuizPreviewCard } from "@/app/types/types";
+import { type QuizPreviewCardType } from "@/app/types/types";
 export default function QuizPreviewCard({
   quiz,
-}: Readonly<{ quiz: QuizPreviewCard }>) {
+}: Readonly<{ quiz: QuizPreviewCardType }>) {
   return (
     <Link
       key={quiz.id}

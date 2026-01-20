@@ -1,7 +1,7 @@
 "use client";
 import NavBar from "@/app/components/NavBar";
 import { useAuth } from "@/app/context/AuthContext";
-import { MCQQuiz } from "@/app/types/types";
+import { MCQQuizType } from "@/app/types/types";
 import { supabase } from "@/app/utils/supabase";
 import validateJSON from "@/app/utils/validateJSON";
 import { Facebook, LinkIcon, Twitter } from "lucide-react";
@@ -81,7 +81,7 @@ export default function AddQuizzesPage() {
       return;
     }
 
-    const newQuiz: MCQQuiz = {
+    const newQuiz: MCQQuizType = {
       id: null as unknown as string,
       created_at: null as unknown as Date,
       author_email: null as unknown as string,

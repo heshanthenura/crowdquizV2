@@ -1,4 +1,4 @@
-export type QuizPreviewCard = {
+export type QuizPreviewCardType = {
   id: number;
   title: string;
   description: string;
@@ -8,26 +8,26 @@ export type QuizPreviewCard = {
   time: number;
 };
 
-export type QuizListResponse = {
+export type QuizListResponseType = {
   page: number;
   limit: number;
   totalPages: number;
   totalCount: number;
-  data: QuizPreviewCard[];
+  data: QuizPreviewCardType[];
   error: string;
 };
 
-export type MCQAnswer = {
+export type MCQAnswerType = {
   text: string;
   isCorrect: boolean;
 };
 
-export type MCQQuestion = {
+export type MCQQuestionType = {
   question: string;
-  answers: MCQAnswer[];
+  answers: MCQAnswerType[];
 };
 
-export type MCQQuiz = {
+export type MCQQuizType = {
   id: string;
   created_at: Date;
   title: string;
@@ -37,5 +37,5 @@ export type MCQQuiz = {
   time: number;
   author_email: string;
   author_name: string;
-  questions: MCQQuestion[];
+  questions: MCQQuestionType[];
 };

@@ -4,9 +4,9 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import QuizPreviewCard from "@/app/components/QuizPreviewCard";
-
+import { type QuizPreviewCardType } from "@/app/types/types";
 export default function Home() {
-  const [quizzes, setQuizzes] = useState<QuizPreviewCard[]>([]);
+  const [quizzes, setQuizzes] = useState<QuizPreviewCardType[]>([]);
 
   useEffect(() => {
     const getRecentQuizzes = async () => {

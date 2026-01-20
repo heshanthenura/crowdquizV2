@@ -1,9 +1,9 @@
-import { MCQAnswer, MCQQuiz } from "@/app/types/types";
+import { MCQAnswerType, MCQQuizType } from "@/app/types/types";
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const data: MCQQuiz = await request.json();
+  const data: MCQQuizType = await request.json();
   const token = request.headers.get("authorization")?.split(" ")[1];
 
   if (!token) {
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
       const questionId = questionData[0].id;
 
-      const optionsData = question.answers.map((answer: MCQAnswer) => ({
+      const optionsData = question.answers.map((answer: MCQAnswerType) => ({
         question_id: questionId,
         option: answer.text,
         is_correct: answer.isCorrect,

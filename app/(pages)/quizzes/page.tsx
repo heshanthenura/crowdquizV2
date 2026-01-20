@@ -3,10 +3,10 @@ import NavBar from "@/app/components/NavBar";
 import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import { type QuizListResponse } from "@/app/types/types";
+import { type QuizListResponseType } from "@/app/types/types";
 
 export default function QuizzesPage() {
-  const [data, setData] = useState<QuizListResponse | null>(null);
+  const [data, setData] = useState<QuizListResponseType | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState("");
   const limit = 10;

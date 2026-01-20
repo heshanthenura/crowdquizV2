@@ -1,4 +1,4 @@
-import { MCQQuestion } from "@/app/types/types";
+import { MCQQuestionType } from "@/app/types/types";
 
 type RawAnswer = { text: unknown; isCorrect: unknown };
 type RawQuestion = { question: unknown; answers: unknown };
@@ -55,7 +55,7 @@ function validateQuestion(element: unknown): [boolean, string] | null {
 
 export default function validateJSON(
   jsonString: string,
-): [boolean, string, MCQQuestion[]?] {
+): [boolean, string, MCQQuestionType[]?] {
   if (!jsonString || jsonString.trim() === "") {
     return [false, "JSON input is empty."];
   }
@@ -76,5 +76,5 @@ export default function validateJSON(
     if (error) return [false, error[1]];
   }
 
-  return [true, "JSON is valid.", parsed as MCQQuestion[]];
+  return [true, "JSON is valid.", parsed as MCQQuestionType[]];
 }
