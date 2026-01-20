@@ -5,18 +5,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { type QuizPreviewCardType } from "@/app/types/types";
+import { getRecentQuizzes } from "@/app//utils/helpers";
 export default function Home() {
   const [quizzes, setQuizzes] = useState<QuizPreviewCardType[]>([]);
 
   useEffect(() => {
-    const getRecentQuizzes = async () => {
-      const response = await fetch(origin + "/api/quiz/recent");
-      const data = await response.json();
-      console.log(data);
-      setQuizzes(data);
-    };
-
-    getRecentQuizzes();
+    (async () => {
+      setQuizzes(await getRecentQuizzes());
+    })().catch(console.error);
   }, []);
 
   return (
@@ -42,7 +38,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="py-16">
+      <section className="py-16 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>

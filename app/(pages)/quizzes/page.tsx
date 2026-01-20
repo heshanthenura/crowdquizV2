@@ -4,6 +4,7 @@ import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type QuizListResponseType } from "@/app/types/types";
+import { listQuizzes } from "@/app/utils/helpers";
 
 export default function QuizzesPage() {
   const [data, setData] = useState<QuizListResponseType | null>(null);
@@ -12,27 +13,15 @@ export default function QuizzesPage() {
   const limit = 10;
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    const listQuizzes = async (page: number, pageLimit: number) => {
-      const res = await fetch(
-        `/api/quiz?page=${page}&limit=${pageLimit}&query=${query}`,
-        {
-          signal: controller.signal,
-        },
-      );
-      if (!res.ok) return;
-      const json = await res.json();
-      setData(json);
-    };
-
-    listQuizzes(currentPage, limit);
+    (async () => {
+      setData((await listQuizzes(currentPage, limit, query)) ?? null);
+    })().catch(console.error);
   }, [currentPage, limit, query]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="bg-gray-100 min-h-screen flex flex-col">
       <NavBar />
-      <div className="bg-gray-100 py-12">
+      <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">

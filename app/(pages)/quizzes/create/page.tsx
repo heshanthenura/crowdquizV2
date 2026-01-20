@@ -4,6 +4,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { MCQQuizType } from "@/app/types/types";
 import { supabase } from "@/app/utils/supabase";
 import validateJSON from "@/app/utils/validateJSON";
+import { createMCQQuiz } from "@/app/utils/helpers";
 import { Facebook, LinkIcon, Twitter } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -75,44 +76,26 @@ export default function AddQuizzesPage() {
     if (Object.values(newErrors).some(Boolean)) {
       return;
     }
-    const [isValid, , questions] = validateJSON(json);
-    if (!isValid) {
-      setErrors((prev) => ({ ...prev, json: true }));
-      return;
-    }
 
-    const newQuiz: MCQQuizType = {
-      id: null as unknown as string,
-      created_at: null as unknown as Date,
-      author_email: null as unknown as string,
-      author_name: null as unknown as string,
-      title: titleInput.trim(),
-      description: descInput.trim(),
-      number_of_questions: questions?.length ?? 0,
-      quiz_type: "MCQ",
-      time: durationInput,
-      questions: questions ?? [],
-    };
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const token = session?.access_token;
 
-    console.log("Quiz object:", newQuiz);
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const token = session?.access_token;
+      const data = await createMCQQuiz({
+        title: titleInput,
+        description: descInput,
+        duration: durationInput,
+        json,
+        token,
+      });
 
-    const res = await fetch(origin + `/api/quiz/new`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(newQuiz),
-    });
-    const data = await res.json();
-    if (res.status === 200) {
       router.push(origin + `/quizzes/` + data.quizId);
-    } else {
-      alert("Error");
+    } catch (err) {
+      console.error(err);
+      alert("Error creating quiz");
+      setErrors((prev) => ({ ...prev, json: true }));
     }
   };
 
