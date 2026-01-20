@@ -27,10 +27,10 @@ export default function AddQuizzesPage() {
   const placeholderJSON = `[{
     "question": "What is the capital of France?",
     "answers":[
-      { "option": "Berlin", "isCorrect": false },
-      { "option": "Madrid", "isCorrect": false },
-      { "option": "Paris", "isCorrect": true },
-      { "option": "Rome", "isCorrect": false }
+      { "option": "Berlin", "is_correct": false },
+      { "option": "Madrid", "is_correct": false },
+      { "option": "Paris", "is_correct": true },
+      { "option": "Rome", "is_correct": false }
     ]
   }]`;
 

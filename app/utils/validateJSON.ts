@@ -1,19 +1,21 @@
 import { MCQQuestionType } from "@/app/types/types";
 
-type RawAnswer = { option: unknown; isCorrect: unknown };
+type RawAnswer = { option: unknown; is_correct: unknown };
 type RawQuestion = { question: unknown; answers: unknown };
 
 function isNonEmptyString(v: unknown): v is string {
   return typeof v === "string" && v.trim() !== "";
 }
 
-function isAnswer(obj: unknown): obj is { option: string; isCorrect: boolean } {
+function isAnswer(
+  obj: unknown,
+): obj is { option: string; is_correct: boolean } {
   const a = obj as RawAnswer;
   return (
     !!a &&
     typeof a.option === "string" &&
     a.option.trim() !== "" &&
-    typeof a.isCorrect === "boolean"
+    typeof a.is_correct === "boolean"
   );
 }
 
@@ -41,9 +43,9 @@ function validateQuestion(element: unknown): [boolean, string] | null {
   let correctCount = 0;
   for (const a of answersRaw) {
     if (!isAnswer(a)) {
-      return [false, "Answers must have 'option' and 'isCorrect' (boolean)."];
+      return [false, "Answers must have 'option' and 'is_correct' (boolean)."];
     }
-    if (a.isCorrect) correctCount += 1;
+    if (a.is_correct) correctCount += 1;
   }
 
   if (correctCount < 1) {
