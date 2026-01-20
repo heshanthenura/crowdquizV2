@@ -3,6 +3,7 @@ import NavBar from "@/app/components/NavBar";
 import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { type QuizListResponse } from "@/app/types/types";
 
 export default function QuizzesPage() {
   const [data, setData] = useState<QuizListResponse | null>(null);
