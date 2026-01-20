@@ -1,7 +1,6 @@
 "use client";
 import NavBar from "@/app/components/NavBar";
 import { useAuth } from "@/app/context/AuthContext";
-import { MCQQuizType } from "@/app/types/types";
 import { supabase } from "@/app/utils/supabase";
 import validateJSON from "@/app/utils/validateJSON";
 import { createMCQQuiz } from "@/app/utils/helpers";

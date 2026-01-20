@@ -1,4 +1,4 @@
-import { MCQAnswerType, MCQQuizType } from "@/app/types/types";
+import { MCQOptionType, MCQQuizType } from "@/app/types/types";
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -55,9 +55,9 @@ export async function POST(request: NextRequest) {
 
       const questionId = questionData[0].id;
 
-      const optionsData = question.answers.map((answer: MCQAnswerType) => ({
+      const optionsData = question.answers.map((answer: MCQOptionType) => ({
         question_id: questionId,
-        option: answer.text,
+        option: answer.option,
         is_correct: answer.isCorrect,
       }));
 

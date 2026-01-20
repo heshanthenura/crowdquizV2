@@ -17,14 +17,22 @@ export type QuizListResponseType = {
   error: string;
 };
 
-export type MCQAnswerType = {
-  text: string;
+export type MCQOptionType = {
+  id: number;
+  created_at: Date;
+  questions_id: number;
+  option: string;
   isCorrect: boolean;
 };
 
 export type MCQQuestionType = {
+  id: number;
+  created_at: Date;
+  quiz_id: number;
+  type: "MCQ";
+  marks: number | null;
   question: string;
-  answers: MCQAnswerType[];
+  answers: MCQOptionType[];
 };
 
 export type MCQQuizType = {
