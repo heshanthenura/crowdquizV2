@@ -1,4 +1,5 @@
 import NavBar from "@/app/components/NavBar";
+import Image from "next/image";
 import { Github, Instagram, Linkedin, Youtube } from "lucide-react";
 
 export default function AboutPage() {
@@ -75,7 +76,17 @@ export default function AboutPage() {
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">
                   Developer
                 </h2>
-                <p className="text-gray-700 font-medium mb-4">
+                <div className="mb-4 flex justify-start">
+                  <Image
+                    src="/developer.jpg"
+                    alt="Developer portrait"
+                    width={120}
+                    height={120}
+                    className="rounded-full border border-gray-200 shadow-sm"
+                    priority
+                  />
+                </div>
+                <p className="text-gray-700 font-bold mb-4">
                   Heshan Thenura Kariyawasam
                 </p>
                 <div className="space-y-4 text-gray-600">
