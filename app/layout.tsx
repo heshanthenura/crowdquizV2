@@ -25,6 +25,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <!-- Cloudflare Web Analytics -->
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "0acbd654a47348e599bc9016da8e0241"}'
+        ></script>
+        <!-- End Cloudflare Web Analytics -->
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
