@@ -157,7 +157,7 @@ export default function QuizPage({
     return (
       <div className="bg-gray-100 min-h-screen">
         <NavBar />
-        <div className="min-h-screen py-12">
+        <div className="py-12">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -306,7 +306,7 @@ export default function QuizPage({
     return (
       <div className="bg-gray-100 min-h-screen">
         <NavBar />
-        <div className="min-h-screen py-12">
+        <div className="py-12">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-xl border border-gray-200 p-8">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
