@@ -12,6 +12,7 @@ export default function AddQuizzesPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [json, setJson] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [validation, setValidation] = useState<{
     status: "idle" | "valid" | "invalid";
     questionCount?: number;
@@ -77,6 +78,7 @@ export default function AddQuizzesPage() {
     }
 
     try {
+      setSubmitting(true);
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -95,6 +97,7 @@ export default function AddQuizzesPage() {
       console.error(err);
       alert("Error creating quiz");
       setErrors((prev) => ({ ...prev, json: true }));
+      setSubmitting(false);
     }
   };
 
@@ -326,10 +329,37 @@ export default function AddQuizzesPage() {
 
             <div className="flex gap-4">
               <button
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
                 onClick={createQuiz}
+                disabled={submitting}
               >
-                Create Quiz
+                {submitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg
+                      className="h-5 w-5 animate-spin"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      aria-hidden
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+                    Creating...
+                  </span>
+                ) : (
+                  "Create Quiz"
+                )}
               </button>
             </div>
           </div>
