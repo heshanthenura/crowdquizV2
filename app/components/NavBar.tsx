@@ -18,6 +18,7 @@ export default function NavBar() {
     { href: "/quizzes", label: "Quizzes" },
     { href: "/quizzes/create", label: "Create Quiz", requireAuth: true },
     { href: "/about", label: "About" },
+    { href: "/profile", label: "Profile", requireAuth: true },
   ].filter((link) => !link.requireAuth || user);
 
   useEffect(() => {
