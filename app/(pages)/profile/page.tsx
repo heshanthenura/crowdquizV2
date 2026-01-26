@@ -61,8 +61,42 @@ export default function ProfilePage() {
   };
 
   const handleDeleteQuiz = (id: number) => {
-    // Delete logic will be implemented
-    setQuizzes(quizzes.filter((q) => q.id !== id));
+    deleteQuiz(id);
+  };
+
+  const deleteQuiz = async (id: number) => {
+    setError(null);
+    try {
+      const { data: sessionData } = await import("@/app/utils/supabase").then(
+        (m) => m.supabase.auth.getSession(),
+      );
+      const token = sessionData?.session?.access_token;
+
+      if (!token) {
+        setError("No auth token found");
+        return;
+      }
+
+      const response = await fetch("/api/quiz/delete", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        setError(payload?.error || "Failed to delete quiz");
+        return;
+      }
+
+      setQuizzes((prev) => prev.filter((q) => q.id !== id));
+    } catch (err) {
+      setError("Error deleting quiz");
+      console.error(err);
+    }
   };
 
   if (loading) return <div>Loading...</div>;
