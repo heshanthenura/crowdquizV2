@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
     const { data: quizzes, error: quizzesError } = await supabaseAdmin
       .from("quizzes")
       .select("*")
-      .eq("author_email", user.email);
+      .eq("author_email", user.email)
+      .order("created_at", { ascending: false });
 
     if (quizzesError) {
       return NextResponse.json(
