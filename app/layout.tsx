@@ -26,13 +26,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="clckd" content="d0cdf235bb0801cf330287fe87131972" />
         <script
           defer
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon='{"token": "0acbd654a47348e599bc9016da8e0241"}'
         ></script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7321285556879956"
-     crossorigin="anonymous"></script>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7321285556879956"
+          crossorigin="anonymous"
+        ></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
