@@ -6,13 +6,32 @@ import { useEffect, useState } from "react";
 import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { type QuizPreviewCardType } from "@/app/types/types";
 import { getRecentQuizzes } from "@/app//utils/helpers";
+import { getPlatformStats } from "./utils/dbutils";
 export default function Home() {
   const [quizzes, setQuizzes] = useState<QuizPreviewCardType[]>([]);
-
+  const [stats, setStats] = useState({
+    totalQuizzes: 0,
+    totalQuestions: 0,
+  });
   useEffect(() => {
-    (async () => {
-      setQuizzes(await getRecentQuizzes());
-    })().catch(console.error);
+    const loadData = async () => {
+      try {
+        const [recentQuizzes, statsResult] = await Promise.all([
+          getRecentQuizzes(),
+          getPlatformStats(),
+        ]);
+
+        setQuizzes(recentQuizzes);
+        setStats({
+          totalQuizzes: statsResult.data?.quizzes ?? 0,
+          totalQuestions: statsResult.data?.questions ?? 0,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadData();
   }, []);
 
   return (
@@ -66,11 +85,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">12+</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">
+                {stats.totalQuizzes}
+              </div>
               <div className="text-gray-600">Available Quizzes</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">80</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">
+                {stats.totalQuestions}
+              </div>
               <div className="text-gray-600">Total Questions</div>
             </div>
             <div className="text-center">

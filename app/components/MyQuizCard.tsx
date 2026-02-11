@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface MyQuizCardProps {
-  quiz: QuizPreviewCardType;
-  onDelete?: (id: number) => void;
+  readonly quiz: QuizPreviewCardType;
+  readonly onDelete?: (id: number) => void;
 }
 
 export default function MyQuizCard({ quiz, onDelete }: MyQuizCardProps) {
@@ -24,7 +24,6 @@ export default function MyQuizCard({ quiz, onDelete }: MyQuizCardProps) {
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this quiz?")) return;
     setIsDeleting(true);
-    // Delete logic will be handled here
     onDelete?.(quiz.id);
   };
 
