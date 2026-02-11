@@ -14,15 +14,17 @@ export default function ProfilePage() {
   const [quizzes, setQuizzes] = useState<QuizPreviewCardType[]>([]);
   const [quizzesLoading, setQuizzesLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"quizzes" | "progress">("quizzes");
 
   useEffect(() => {
     if (!loading && !user) {
       router.push("/unauthenticated");
     }
+    console.log("User in ProfilePage:", user);
   }, [user, loading, router]);
 
   useEffect(() => {
-    if (user && !loading) {
+    if (user && !loading && !quizzes.length) {
       fetchMyQuizzes();
     }
   }, [user, loading]);
@@ -116,39 +118,50 @@ export default function ProfilePage() {
   if (!user) return null;
   console.log(user);
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col">
+    <div className="bg-gray-100 min-h-screen flex flex-col gap-[10px]">
       <NavBar />
-      <div className="p-8 max-w-7xl mx-auto w-full">
-        {/* Profile Card */}
-        <div className="flex justify-center mb-12">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-            <div className="mb-6">
-              {user.user_metadata?.picture && (
-                <Image
-                  src={user.user_metadata.picture}
-                  alt="Profile"
-                  width={96}
-                  height={96}
-                  className="rounded-full mx-auto mb-4 border-4 border-blue-500 object-cover"
-                />
-              )}
-            </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Welcome,{" "}
-              {user.user_metadata?.full_name || user.email?.split("@")[0]}!
+      <div className="max-w-7xl w-screen mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center gap-[10px] ">
+        <div className="bg-white w-full rounded-xl flex flex-col md:flex-row justify-between items-center p-[20px] gap-[10px]">
+          <div>
+            <Image
+              className="rounded-lg"
+              src={user.user_metadata.avatar_url}
+              alt="User Avatar"
+              width={100}
+              height={100}
+            />
+          </div>
+          <div className="flex-1">
+            <h1 className="text-2xl text-[30px] font-extrabold text-gray-800">
+              {user.user_metadata.full_name}
             </h1>
-            <p className="text-gray-600">
-              {user.user_metadata?.full_name && (
-                <span className="block text-lg">{user.email}</span>
-              )}
-            </p>
+            <div>
+              <p className="text-blue-600">{user.email}</p>
+              <p className="text-gray-600">
+                {"Learning Since "}
+                {new Date(user.created_at).toLocaleDateString()}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* My Quizzes Section */}
+        <div className="border-b-[1px] border-gray-300 w-full flex font-bold gap-[10px]">
+          <button
+            className={`border-b-2 ${activeTab === "quizzes" ? "border-blue-500 text-blue-500" : "border-transparent text-gray-600"}`}
+            onClick={() => setActiveTab("quizzes")}
+          >
+            My Quizzes
+          </button>
+          <button
+            className={`border-b-2 ${activeTab === "progress" ? "border-blue-500 text-blue-500" : "border-transparent text-gray-600"}`}
+            onClick={() => setActiveTab("progress")}
+          >
+            My Progress
+          </button>
+        </div>
+
         <div>
           <h2 className="text-3xl font-bold text-gray-800 mb-6">My Quizzes</h2>
-
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
               {error}
