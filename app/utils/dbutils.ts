@@ -58,3 +58,29 @@ export async function getMCQQuiz(id: number): Promise<{
 
   return { data: mcqQuiz, error: null };
 }
+
+export async function getPlatformStats(): Promise<{
+  data: { quizzes: number; questions: number } | null;
+  error: Error | null;
+}> {
+  const { count: quizzesCount, error: quizzesError } = await supabase
+    .from("quizzes")
+    .select("*", { count: "exact", head: true });
+
+  if (quizzesError || quizzesCount === null) {
+    return { data: null, error: quizzesError };
+  }
+
+  const { count: questionsCount, error: questionsError } = await supabase
+    .from("questions")
+    .select("*", { count: "exact", head: true });
+
+  if (questionsError || questionsCount === null) {
+    return { data: null, error: questionsError };
+  }
+
+  return {
+    data: { quizzes: quizzesCount, questions: questionsCount },
+    error: null,
+  };
+}

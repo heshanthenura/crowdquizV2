@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import MyQuizCard from "@/app/components/MyQuizCard";
 import { QuizPreviewCardType } from "@/app/types/types";
+import { deleteQuizById, getSessionAccessToken } from "@/app/utils/helpers";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -29,10 +30,7 @@ export default function ProfilePage() {
   const fetchMyQuizzes = async () => {
     setQuizzesLoading(true);
     try {
-      const { data: sessionData } = await import("@/app/utils/supabase").then(
-        (m) => m.supabase.auth.getSession(),
-      );
-      const token = sessionData?.session?.access_token;
+      const token = await getSessionAccessToken();
 
       if (!token) {
         setError("No auth token found");
@@ -67,28 +65,9 @@ export default function ProfilePage() {
   const deleteQuiz = async (id: number) => {
     setError(null);
     try {
-      const { data: sessionData } = await import("@/app/utils/supabase").then(
-        (m) => m.supabase.auth.getSession(),
-      );
-      const token = sessionData?.session?.access_token;
-
-      if (!token) {
-        setError("No auth token found");
-        return;
-      }
-
-      const response = await fetch("/api/quiz/delete", {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
-
-      if (!response.ok) {
-        const payload = await response.json().catch(() => ({}));
-        setError(payload?.error || "Failed to delete quiz");
+      const result = await deleteQuizById(id);
+      if (!result.ok) {
+        setError(result.error);
         return;
       }
 
@@ -97,6 +76,40 @@ export default function ProfilePage() {
       setError("Error deleting quiz");
       console.error(err);
     }
+  };
+
+  const renderQuizzesSection = () => {
+    if (quizzesLoading) {
+      return (
+        <div className="text-center py-8 text-gray-600">
+          Loading your quizzes...
+        </div>
+      );
+    }
+
+    if (quizzes.length === 0) {
+      return (
+        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+          <p className="text-gray-600 text-lg mb-4">
+            {`You haven't created any quizzes yet.`}
+          </p>
+          <button
+            onClick={() => router.push("/quizzes/create")}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded transition-colors"
+          >
+            Create Your First Quiz
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {quizzes.map((quiz) => (
+          <MyQuizCard key={quiz.id} quiz={quiz} onDelete={handleDeleteQuiz} />
+        ))}
+      </div>
+    );
   };
 
   if (loading) return <div>Loading...</div>;
@@ -142,33 +155,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {quizzesLoading ? (
-            <div className="text-center py-8 text-gray-600">
-              Loading your quizzes...
-            </div>
-          ) : quizzes.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 text-center">
-              <p className="text-gray-600 text-lg mb-4">
-                You haven't created any quizzes yet.
-              </p>
-              <button
-                onClick={() => router.push("/quizzes/create")}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded transition-colors"
-              >
-                Create Your First Quiz
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {quizzes.map((quiz) => (
-                <MyQuizCard
-                  key={quiz.id}
-                  quiz={quiz}
-                  onDelete={handleDeleteQuiz}
-                />
-              ))}
-            </div>
-          )}
+          {renderQuizzesSection()}
         </div>
       </div>
     </div>
