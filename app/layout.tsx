@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/app/context/AuthContext";
+import LoginOverlayGate from "@/app/components/LoginOverlayGate";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <LoginOverlayGate />
+          {children}
+        </AuthProvider>
         <Script
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon='{"token": "0acbd654a47348e599bc9016da8e0241"}'

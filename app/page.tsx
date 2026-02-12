@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { type QuizPreviewCardType } from "@/app/types/types";
-import { getRecentQuizzes } from "@/app//utils/helpers";
-import { getPlatformStats } from "./utils/dbutils";
+import { getRecentQuizzes } from "@/app/utils/helpers";
+import { getPlatformStats } from "@/app/utils/dbutils";
+
 export default function Home() {
   const [quizzes, setQuizzes] = useState<QuizPreviewCardType[]>([]);
   const [stats, setStats] = useState({
@@ -37,6 +38,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
+
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
