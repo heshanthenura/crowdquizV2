@@ -16,6 +16,7 @@ export default function NavBar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/quizzes", label: "Quizzes" },
+    { href: "/leaderboard", label: "Leaderboard" },
     { href: "/quizzes/create", label: "Create Quiz", requireAuth: true },
     { href: "/about", label: "About" },
     { href: "/profile", label: "Profile", requireAuth: true },
