@@ -7,5 +7,17 @@ export async function GET(
 ) {
   const { id } = await params;
   const { data, error } = await getMCQQuiz(Number.parseInt(id));
-  return NextResponse.json({ data, error });
+  const publicData = data
+    ? {
+        ...data,
+        questions: data.questions.map((question) => ({
+          ...question,
+          answers: question.answers.map(({ is_correct: _isCorrect, ...rest }) =>
+            rest,
+          ),
+        })),
+      }
+    : null;
+
+  return NextResponse.json({ data: publicData, error });
 }
