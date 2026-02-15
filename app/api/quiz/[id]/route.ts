@@ -12,8 +12,8 @@ export async function GET(
         ...data,
         questions: data.questions.map((question) => ({
           ...question,
-          answers: question.answers.map(({ is_correct: _isCorrect, ...rest }) =>
-            rest,
+          answers: question.answers.map(
+            ({ is_correct: _isCorrect, ...rest }) => rest,
           ),
         })),
       }

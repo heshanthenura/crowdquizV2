@@ -1,4 +1,5 @@
 import {
+  MCQMarkResult,
   MCQQuizType,
   QuizListResponseType,
   QuizPreviewCardType,
@@ -139,4 +140,75 @@ export async function deleteQuizById(
   }
 
   return { ok: true };
+}
+
+export async function handleFinish(
+  quizId: number,
+  userAnswers: Record<number, number>,
+) {
+  const token = await getSessionAccessToken();
+  const response = await fetch("/api/quiz/mark", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ quizId: quizId, answers: userAnswers }),
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(payload?.error || "Failed to mark quiz");
+  }
+
+  const payload = await response.json();
+  return payload.data as MCQMarkResult;
+}
+
+export async function markQuiz(
+  quiz: MCQQuizType,
+  userAnswers: Record<number, number>,
+): Promise<MCQMarkResult> {
+  const results = quiz.questions.map((question) => {
+    const correctAnswer = question.answers.find((opt) => opt.is_correct);
+    const correctAnswerId = correctAnswer?.id ?? null;
+    const userAnswerId = userAnswers[question.id] ?? null;
+
+    let status: "correct" | "wrong" | "unanswered";
+
+    if (userAnswerId === null) {
+      status = "unanswered";
+    } else if (correctAnswerId !== null && userAnswerId === correctAnswerId) {
+      status = "correct";
+    } else {
+      status = "wrong";
+    }
+
+    return {
+      questionId: question.id,
+      correctAnswerId,
+      userAnswerId,
+      status,
+    };
+  });
+
+  const correctCount = results.filter((r) => r.status === "correct").length;
+  const wrongCount = results.filter((r) => r.status === "wrong").length;
+  const unansweredCount = results.filter(
+    (r) => r.status === "unanswered",
+  ).length;
+  const totalQuestions = results.length;
+  const scorePercentage = totalQuestions
+    ? Math.round((correctCount / totalQuestions) * 100)
+    : 0;
+
+  return {
+    quizId: Number(quiz.id),
+    totalQuestions,
+    correctCount,
+    wrongCount,
+    unansweredCount,
+    scorePercentage,
+    results,
+  };
 }
