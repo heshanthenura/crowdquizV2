@@ -59,10 +59,12 @@ export type MCQMarkAnswerResult = {
 
 export type MCQMarkResult = {
   quizId: number;
+  userId?: string | null;
   totalQuestions: number;
   correctCount: number;
   wrongCount: number;
   unansweredCount: number;
   scorePercentage: number;
+  timeSpentSeconds?: number | null;
   results: MCQMarkAnswerResult[];
 };

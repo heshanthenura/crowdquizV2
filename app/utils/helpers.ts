@@ -5,6 +5,7 @@ import {
   QuizPreviewCardType,
 } from "@/app/types/types";
 import validateJSON from "./validateJSON";
+import { decrypt } from "./crypto";
 
 type TokenCache = {
   token: string;
@@ -145,6 +146,7 @@ export async function deleteQuizById(
 export async function handleFinish(
   quizId: number,
   userAnswers: Record<number, number>,
+  attemptToken: string,
 ) {
   const token = await getSessionAccessToken();
   const response = await fetch("/api/quiz/mark", {
@@ -153,7 +155,11 @@ export async function handleFinish(
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ quizId: quizId, answers: userAnswers }),
+    body: JSON.stringify({
+      quizId: quizId,
+      answers: userAnswers,
+      attemptToken,
+    }),
   });
 
   if (!response.ok) {
@@ -168,12 +174,29 @@ export async function handleFinish(
 export async function markQuiz(
   quiz: MCQQuizType,
   userAnswers: Record<number, number>,
+  attemptToken: string | undefined,
+  userId: string | null,
 ): Promise<MCQMarkResult> {
+  let timeSpentSeconds: number | null = null;
+
+  if (attemptToken) {
+    try {
+      const startMs = Number.parseInt(decrypt(attemptToken), 10);
+      if (Number.isFinite(startMs) && startMs > 0) {
+        timeSpentSeconds = Math.max(
+          0,
+          Math.round((Date.now() - startMs) / 1000),
+        );
+      }
+    } catch {
+      timeSpentSeconds = null;
+    }
+  }
+
   const results = quiz.questions.map((question) => {
     const correctAnswer = question.answers.find((opt) => opt.is_correct);
     const correctAnswerId = correctAnswer?.id ?? null;
     const userAnswerId = userAnswers[question.id] ?? null;
-
     let status: "correct" | "wrong" | "unanswered";
 
     if (userAnswerId === null) {
@@ -204,11 +227,13 @@ export async function markQuiz(
 
   return {
     quizId: Number(quiz.id),
+    userId,
     totalQuestions,
     correctCount,
     wrongCount,
     unansweredCount,
     scorePercentage,
+    timeSpentSeconds,
     results,
   };
 }

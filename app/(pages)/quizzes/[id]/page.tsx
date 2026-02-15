@@ -26,6 +26,7 @@ export default function QuizPage({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
   const resultsRef = useRef<HTMLDivElement | null>(null);
+  const attemptToken = useRef<string | null>(null);
 
   useEffect(() => {
     params.then((p) => setId(p.id));
@@ -70,8 +71,13 @@ export default function QuizPage({
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [showResults]);
 
-  const handelStartQuiz = () => {
+  const handelStartQuiz = async () => {
     if (!quiz) return;
+
+    const response = await fetch(origin + `/api/quiz/start`);
+    const body = await response.json();
+    console.log("Start quiz response:", body.token);
+    attemptToken.current = body.token;
 
     setIsQuizStarted(true);
     setTimeRemaining(Number(quiz.time) * 60);
@@ -141,7 +147,11 @@ export default function QuizPage({
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const result = await handleFinish(Number.parseInt(id), userAnswers);
+      const result = await handleFinish(
+        Number.parseInt(id),
+        userAnswers,
+        attemptToken.current ?? "",
+      );
       setMarkResult(result);
       setShowResults(true);
     } catch (err) {
@@ -228,6 +238,12 @@ export default function QuizPage({
                     You got {markResult?.correctCount ?? 0} out of{" "}
                     {quiz.questions.length} questions correct
                   </p>
+                  {markResult?.timeSpentSeconds !== null &&
+                    markResult?.timeSpentSeconds !== undefined && (
+                      <p className="text-gray-600 mt-2">
+                        Time spent: {formatTime(markResult.timeSpentSeconds)}
+                      </p>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
