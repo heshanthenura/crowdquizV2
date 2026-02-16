@@ -29,6 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="clckd" content="d0cdf235bb0801cf330287fe87131972" />
+        <meta name="monetag" content="981a3d61ba47516377ae7d97953fb7c7"></meta>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
