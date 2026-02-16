@@ -5,8 +5,8 @@ export async function GET() {
   const { data, error } = await supabaseAdmin
     .from("leaderboard_with_users")
     .select("*")
-    .order("rank", { ascending: false })
-    .limit(100);
+    .order("xp", { ascending: false })
+    .limit(10);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

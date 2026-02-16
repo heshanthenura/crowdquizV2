@@ -9,7 +9,7 @@ export default function LeaderboardPage() {
     {
       id: number;
       user_id: string;
-      rank: string;
+      xp: number;
       full_name: string;
       picture: string;
       created_at: Date;
@@ -37,9 +37,7 @@ export default function LeaderboardPage() {
             <div className="grid grid-cols-12 gap-4 border-b border-gray-200 px-6 py-4 text-sm font-semibold text-gray-500">
               <div className="col-span-1">#</div>
               <div className="col-span-5">Player</div>
-              <div className="col-span-2 text-right">Quizzes</div>
-              <div className="col-span-2 text-right">Accuracy</div>
-              <div className="col-span-2 text-right">Points</div>
+              <div className="col-span-2 text-right">XP</div>
             </div>
             <div className="divide-y divide-gray-100">
               {leaders.map((leader, index) => (
@@ -60,11 +58,7 @@ export default function LeaderboardPage() {
                     />
                     <span>{leader.full_name}</span>
                   </div>
-                  <div className="col-span-2 text-right">-1</div>
-                  <div className="col-span-2 text-right">-1</div>
-                  <div className="col-span-2 text-right font-semibold text-blue-600">
-                    -1
-                  </div>
+                  <div className="col-span-2 text-right">{leader.xp.toFixed(2)}</div>
                 </div>
               ))}
             </div>

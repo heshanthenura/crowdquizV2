@@ -47,3 +47,24 @@ export type MCQQuizType = {
   author_name: string;
   questions: MCQQuestionType[];
 };
+
+export type MCQMarkStatus = "correct" | "wrong" | "unanswered";
+
+export type MCQMarkAnswerResult = {
+  questionId: number;
+  correctAnswerId: number | null;
+  userAnswerId: number | null;
+  status: MCQMarkStatus;
+};
+
+export type MCQMarkResult = {
+  quizId: number;
+  userId?: string | null;
+  totalQuestions: number;
+  correctCount: number;
+  wrongCount: number;
+  unansweredCount: number;
+  scorePercentage: number;
+  timeSpentSeconds?: number | null;
+  results: MCQMarkAnswerResult[];
+};
