@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import MCQOptionCard from "@/app/components/MCQOptionCard";
 import NavBar from "@/app/components/NavBar";
 import { useAuth } from "@/app/context/AuthContext";
@@ -24,6 +25,7 @@ export default function QuizPage({
   const [showResults, setShowResults] = useState(false);
   const [markResult, setMarkResult] = useState<MCQMarkResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSupportPopup, setShowSupportPopup] = useState(true);
   const { user } = useAuth();
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const attemptToken = useRef<string | null>(null);
@@ -175,6 +177,51 @@ export default function QuizPage({
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <NavBar />
+
+      {/* support developers popup */}
+      {showSupportPopup && (
+        <div className="fixed inset-0 backdrop-blur-md bg-white/20 flex items-center justify-center z-50 p-4">
+          <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full border border-white/40">
+            <div className="p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Support Our Developers
+              </h2>
+              <div className="mb-6">
+                <Image
+                  src="/pussinboot.png"
+                  alt="Support developers"
+                  width={400}
+                  height={300}
+                  className="w-full h-auto rounded-lg object-cover"
+                />
+              </div>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Help us continue building amazing quizzes for you. Just watch an
+                ad to support our development team.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowSupportPopup(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  Skip
+                </button>
+                <button
+                  onClick={() => {
+                    window.open("https://omg10.com/4/10618828", "_blank");
+                    setShowSupportPopup(false);
+                  }}
+                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Watch Ad
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="min-h-screen pb-24 py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* quiz details */}
