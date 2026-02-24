@@ -48,6 +48,13 @@ export default function RootLayout({
           strategy="afterInteractive"
           async
         />
+        <Script id="aclib-autotag" strategy="afterInteractive">
+          {`
+            aclib.runAutoTag({
+              zoneId: 'hfw4t30q9y',
+            });
+          `}
+        </Script>
       </body>
     </html>
   );
