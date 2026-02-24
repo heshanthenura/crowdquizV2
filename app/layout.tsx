@@ -35,11 +35,6 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7321285556879956"
           crossOrigin="anonymous"
         ></script>
-        <script
-          id="aclib"
-          async
-          src="https://acscdn.com/script/aclib.js"
-        ></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
