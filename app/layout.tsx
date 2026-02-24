@@ -30,6 +30,18 @@ export default function RootLayout({
       <head>
         <meta name="clckd" content="d0cdf235bb0801cf330287fe87131972" />
         <meta name="monetag" content="981a3d61ba47516377ae7d97953fb7c7"></meta>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7321285556879956"
+          crossOrigin="anonymous"
+        ></script>
+        // eslint-disable-next-line @next/next/no-sync-scripts,
+        @next/next/no-sync-scripts
+        <script
+          id="aclib"
+          type="text/javascript"
+          src="//acscdn.com/script/aclib.js"
+        ></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -41,16 +53,6 @@ export default function RootLayout({
         <Script
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon='{"token": "0acbd654a47348e599bc9016da8e0241"}'
-          strategy="afterInteractive"
-        />
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7321285556879956"
-          strategy="afterInteractive"
-          async
-        />
-        <Script
-          id="aclib"
-          src="https://acscdn.com/script/aclib.js"
           strategy="afterInteractive"
         />
       </body>
