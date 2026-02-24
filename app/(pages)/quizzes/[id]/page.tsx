@@ -226,13 +226,11 @@ export default function QuizPage({
       <div className="min-h-screen pb-24 py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div>
-            <Script id="aclib-banner" strategy="afterInteractive">
-              {`
-                aclib.runBanner({
-                  zoneId: '11006314',
-                });
-              `}
-            </Script>
+   <script type="text/javascript">
+        aclib.runBanner({
+            zoneId: '11006314',
+        });
+    </script>
           </div>
 
           {/* quiz details */}

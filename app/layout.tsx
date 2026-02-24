@@ -35,8 +35,6 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7321285556879956"
           crossOrigin="anonymous"
         ></script>
-        // eslint-disable-next-line @next/next/no-sync-scripts,
-        @next/next/no-sync-scripts
         <script
           id="aclib"
           type="text/javascript"
