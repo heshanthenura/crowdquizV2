@@ -7,6 +7,7 @@ import { MCQMarkResult, MCQQuizType } from "@/app/types/types";
 import { handleFinish } from "@/app/utils/helpers";
 import { Clock, FileQuestion } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Script from "next/script";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 export default function QuizPage({
@@ -224,6 +225,16 @@ export default function QuizPage({
 
       <div className="min-h-screen pb-24 py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div>
+            <Script id="aclib-banner" strategy="afterInteractive">
+              {`
+                aclib.runBanner({
+                  zoneId: '11006314',
+                });
+              `}
+            </Script>
+          </div>
+
           {/* quiz details */}
           <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
