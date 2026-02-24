@@ -48,6 +48,11 @@ export default function RootLayout({
           strategy="afterInteractive"
           async
         />
+        <Script
+          id="aclib"
+          src="https://acscdn.com/script/aclib.js"
+          strategy="afterInteractive"
+        />
         <Script id="aclib-autotag" strategy="afterInteractive">
           {`
             aclib.runAutoTag({
