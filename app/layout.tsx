@@ -53,13 +53,6 @@ export default function RootLayout({
           src="https://acscdn.com/script/aclib.js"
           strategy="afterInteractive"
         />
-        <Script id="aclib-autotag" strategy="afterInteractive">
-          {`
-            aclib.runAutoTag({
-              zoneId: 'hfw4t30q9y',
-            });
-          `}
-        </Script>
       </body>
     </html>
   );
