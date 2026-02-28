@@ -9,6 +9,7 @@ import { Clock, FileQuestion } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import AdBanner from "@/app/components/AdBanner";
 
 export default function QuizPage({
   params,
@@ -179,7 +180,7 @@ export default function QuizPage({
     <div className="min-h-screen flex flex-col bg-gray-100">
       <NavBar />
 
-      {/* support developers popup */}
+      {/* support developers popup
       {showSupportPopup && (
         <div className="fixed inset-0 backdrop-blur-md bg-white/20 flex items-center justify-center z-50 p-4">
           <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full border border-white/40">
@@ -221,21 +222,15 @@ export default function QuizPage({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="min-h-screen pb-24 py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div>
-            <Script id="aclib-banner" strategy="afterInteractive">
-              {`
-                aclib.runBanner({
-                  zoneId: '11006314',
-                });
-              `}
-            </Script>
-          </div>
-
           {/* quiz details */}
+          <AdBanner
+            desktopKey="448cb8e8185cc672ab858e654b614779"
+            mobileKey="6eaf505d4d02224d1f3c6c5be49fb5c2"
+          />
           <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               {quiz.title}
