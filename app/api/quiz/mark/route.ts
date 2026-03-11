@@ -71,6 +71,6 @@ export async function POST(request: NextRequest) {
       console.error("Failed to decode attempt token", err);
     }
   }
-  console.log("Marking result:", result);
+  // console.log("Marking result:", result);
   return NextResponse.json({ data: result });
 }
