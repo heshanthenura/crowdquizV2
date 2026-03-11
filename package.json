@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "dev-wp": "next dev --webpack",
-    "build-wp": "next build --webpack",
+    "dev-tp": "next dev",
+    "build-tp": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
