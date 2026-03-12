@@ -3,26 +3,51 @@
 import Image from "next/image";
 import NavBar from "@/app/components/NavBar";
 import { useEffect, useState } from "react";
+import { getSessionAccessToken } from "@/app/utils/helpers";
+
+type LeaderboardItem = {
+  id: number;
+  user_id: string;
+  xp: number;
+  full_name: string;
+  picture: string;
+  created_at: Date;
+};
+
+type MyRankItem = LeaderboardItem & {
+  rank: number;
+};
 
 export default function LeaderboardPage() {
-  const [leaders, setLeaders] = useState<
-    {
-      id: number;
-      user_id: string;
-      xp: number;
-      full_name: string;
-      picture: string;
-      created_at: Date;
-    }[]
-  >([]);
+  const [leaders, setLeaders] = useState<LeaderboardItem[]>([]);
+  const [me, setMe] = useState<MyRankItem | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/api/leaderboard/get");
+      if (!response.ok) return;
       const result = await response.json();
       setLeaders(result.data);
     };
+
+    const fetchMe = async () => {
+      const token = await getSessionAccessToken();
+      if (!token) return;
+
+      const response = await fetch("/api/leaderboard/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+      setMe(result.data ?? null);
+    };
+
     fetchData();
+    fetchMe();
   }, []);
 
   return (
@@ -40,6 +65,26 @@ export default function LeaderboardPage() {
               <div className="col-span-2 text-right">XP</div>
             </div>
             <div className="divide-y divide-gray-100">
+              {me && (
+                <div className="bg-gray-200 grid grid-cols-12 gap-4 px-6 py-4 text-sm text-gray-700">
+                  <div className="col-span-1 font-semibold text-gray-900">
+                    {me.rank}
+                  </div>
+                  <div className="col-span-5 flex items-center gap-3 font-medium text-gray-900">
+                    <Image
+                      width={10}
+                      height={10}
+                      src={me.picture}
+                      alt={me.full_name}
+                      className="h-9 w-9 rounded-full object-cover"
+                    />
+                    <span>{me.full_name} (You)</span>
+                  </div>
+                  <div className="col-span-2 text-right">
+                    {me.xp.toFixed(2)}
+                  </div>
+                </div>
+              )}
               {leaders.map((leader, index) => (
                 <div
                   key={leader.id}
@@ -58,7 +103,9 @@ export default function LeaderboardPage() {
                     />
                     <span>{leader.full_name}</span>
                   </div>
-                  <div className="col-span-2 text-right">{leader.xp.toFixed(2)}</div>
+                  <div className="col-span-2 text-right">
+                    {leader.xp.toFixed(2)}
+                  </div>
                 </div>
               ))}
             </div>
