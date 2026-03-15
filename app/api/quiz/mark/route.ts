@@ -4,7 +4,9 @@ import { decrypt } from "@/app/utils/crypto";
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
-const getUserIdFromAuthHeader = (request: NextRequest) => {
+const getVerifiedUserId = async (
+  request: NextRequest,
+): Promise<string | null> => {
   const authHeader = request.headers.get("authorization") ?? "";
   const token = authHeader.startsWith("Bearer ")
     ? authHeader.slice("Bearer ".length)
@@ -12,16 +14,12 @@ const getUserIdFromAuthHeader = (request: NextRequest) => {
 
   if (!token) return null;
 
-  const payloadPart = token.split(".")[1];
-  if (!payloadPart) return null;
-
-  try {
-    const json = Buffer.from(payloadPart, "base64url").toString("utf8");
-    const payload = JSON.parse(json) as { sub?: string };
-    return payload.sub ?? null;
-  } catch {
-    return null;
-  }
+  const {
+    data: { user },
+    error,
+  } = await supabaseAdmin.auth.getUser(token);
+  if (error || !user) return null;
+  return user.id;
 };
 
 export async function POST(request: NextRequest) {
@@ -42,7 +40,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const userId = getUserIdFromAuthHeader(request);
+  const userId = await getVerifiedUserId(request);
   const result = await markQuiz(quiz.data, answers, body?.attemptToken, userId);
 
   if (userId && body?.attemptToken) {
@@ -71,6 +69,5 @@ export async function POST(request: NextRequest) {
       console.error("Failed to decode attempt token", err);
     }
   }
-  // console.log("Marking result:", result);
   return NextResponse.json({ data: result });
 }
