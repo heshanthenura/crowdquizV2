@@ -63,13 +63,26 @@ export async function listQuizzes(
   page: number,
   pageLimit: number,
   query: string,
+  tag: string,
 ) {
-  const res = await fetch(
-    origin + `/api/quiz?page=${page}&limit=${pageLimit}&query=${query}`,
-  );
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(pageLimit),
+    query,
+    tag,
+  });
+
+  const res = await fetch(origin + `/api/quiz?${params.toString()}`);
   if (!res.ok) return;
   const json = await res.json();
   return json as QuizListResponseType;
+}
+
+export async function getQuizTags() {
+  const res = await fetch(origin + "/api/quiz/tags");
+  if (!res.ok) return [];
+  const json = await res.json();
+  return json as string[];
 }
 
 export async function createMCQQuiz(params: {

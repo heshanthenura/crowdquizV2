@@ -4,19 +4,29 @@ import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type QuizListResponseType } from "@/app/types/types";
-import { listQuizzes } from "@/app/utils/helpers";
+import { getQuizTags, listQuizzes } from "@/app/utils/helpers";
 
 export default function QuizzesPage() {
   const [data, setData] = useState<QuizListResponseType | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
+  const [selectedTag, setSelectedTag] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState("");
   const limit = 10;
 
   useEffect(() => {
     (async () => {
-      setData((await listQuizzes(currentPage, limit, query)) ?? null);
+      setTags(await getQuizTags());
     })().catch(console.error);
-  }, [currentPage, limit, query]);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      setData(
+        (await listQuizzes(currentPage, limit, query, selectedTag)) ?? null,
+      );
+    })().catch(console.error);
+  }, [currentPage, limit, query, selectedTag]);
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
@@ -33,18 +43,36 @@ export default function QuizzesPage() {
           </div>
 
           <div className="mb-8">
-            <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search quizzes..."
-                value={query}
+            <div className="flex flex-col sm:flex-row gap-3 max-w-3xl">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search quizzes..."
+                  value={query}
+                  onChange={(e) => {
+                    setCurrentPage(1);
+                    setQuery(e.target.value);
+                  }}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <select
+                value={selectedTag}
                 onChange={(e) => {
                   setCurrentPage(1);
-                  setQuery(e.target.value);
+                  setSelectedTag(e.target.value);
                 }}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+                className="sm:w-52 px-4 py-3 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All</option>
+                {tags.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
