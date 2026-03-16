@@ -7,18 +7,24 @@ export async function GET(request: NextRequest) {
     const page = Number(searchParams.get("page")) || 1;
     const limit = Number(searchParams.get("limit")) || 10;
     const query = searchParams.get("query") || "";
+    const selectedTag = searchParams.get("tag") || "all";
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    const { data, error, count } = await supabase
+    let dbQuery = supabase
       .from("quizzes")
       .select(
-        "id,title,description,quiz_type,number_of_questions,time, created_at::date",
+        "id,title,description,quiz_type,tag,number_of_questions,time, created_at::date",
         { count: "exact" },
       )
       .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
-      .order("created_at", { ascending: false })
-      .range(from, to);
+      .order("created_at", { ascending: false });
+
+    if (selectedTag !== "all") {
+      dbQuery = dbQuery.eq("tag", selectedTag);
+    }
+
+    const { data, error, count } = await dbQuery.range(from, to);
 
     const totalPages = count ? Math.ceil(count / limit) : 0;
 

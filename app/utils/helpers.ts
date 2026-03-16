@@ -63,18 +63,32 @@ export async function listQuizzes(
   page: number,
   pageLimit: number,
   query: string,
+  tag: string,
 ) {
-  const res = await fetch(
-    origin + `/api/quiz?page=${page}&limit=${pageLimit}&query=${query}`,
-  );
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(pageLimit),
+    query,
+    tag,
+  });
+
+  const res = await fetch(origin + `/api/quiz?${params.toString()}`);
   if (!res.ok) return;
   const json = await res.json();
   return json as QuizListResponseType;
 }
 
+export async function getQuizTags() {
+  const res = await fetch(origin + "/api/quiz/tags");
+  if (!res.ok) return [];
+  const json = await res.json();
+  return json as string[];
+}
+
 export async function createMCQQuiz(params: {
   title: string;
   description: string;
+  tag?: string;
   duration: number;
   json: string;
   token?: string;
@@ -91,6 +105,7 @@ export async function createMCQQuiz(params: {
     author_name: null as unknown as string,
     title: params.title.trim(),
     description: params.description.trim(),
+    tag: params.tag?.trim() ? params.tag.trim().toUpperCase() : null,
     number_of_questions: questions?.length ?? 0,
     quiz_type: "MCQ",
     time: params.duration,

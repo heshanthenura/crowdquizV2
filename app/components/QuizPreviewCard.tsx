@@ -11,8 +11,15 @@ export default function QuizPreviewCard({
       className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-200 group"
     >
       <div className="flex items-start justify-between mb-4">
-        <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">
-          {quiz.quiz_type}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">
+            {quiz.quiz_type}
+          </div>
+          {quiz.tag && (
+            <div className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">
+              {quiz.tag}
+            </div>
+          )}
         </div>
         <span className="text-xs text-gray-500">
           {new Date(quiz.created_at).toLocaleDateString("en-US", {

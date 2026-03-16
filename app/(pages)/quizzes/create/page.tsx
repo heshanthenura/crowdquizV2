@@ -63,6 +63,8 @@ export default function AddQuizzesPage() {
     const descInput = (
       document.getElementById("description") as HTMLTextAreaElement
     )?.value;
+    const tagInput = (document.getElementById("tag") as HTMLInputElement)
+      ?.value;
     const durationInput = Number(
       (document.getElementById("duration") as HTMLInputElement)?.value,
     );
@@ -87,6 +89,7 @@ export default function AddQuizzesPage() {
       const data = await createMCQQuiz({
         title: titleInput,
         description: descInput,
+        tag: tagInput,
         duration: durationInput,
         json,
         token,
@@ -204,6 +207,24 @@ export default function AddQuizzesPage() {
                     Duration is required
                   </p>
                 )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="tag"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Tag (Optional)
+                </label>
+                <input
+                  id="tag"
+                  type="text"
+                  placeholder="SCIENCE"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onChange={(e) => {
+                    e.target.value = e.target.value.toUpperCase();
+                  }}
+                />
               </div>
             </div>
 

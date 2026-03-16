@@ -6,7 +6,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("quizzes")
       .select(
-        "id,title,description,quiz_type,number_of_questions,time, created_at::date",
+        "id,title,description,quiz_type,tag,number_of_questions,time, created_at::date",
       )
       .order("created_at", { ascending: false })
       .limit(10);
