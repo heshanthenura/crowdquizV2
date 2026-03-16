@@ -41,6 +41,7 @@ export type MCQQuizType = {
   created_at: Date;
   title: string;
   description: string;
+  tag?: string | null;
   number_of_questions: number;
   quiz_type: string;
   time: number;

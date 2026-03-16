@@ -23,12 +23,16 @@ export async function POST(request: NextRequest) {
     console.log(user.role);
     const authorEmail = user.email;
     const authorName = user.user_metadata?.full_name || user.email;
+    const normalizedTag = data.tag?.trim()
+      ? data.tag.trim().toUpperCase()
+      : null;
 
     const { data: quizData, error: quizError } = await supabaseAdmin
       .from("quizzes")
       .insert({
         title: data.title,
         description: data.description,
+        tag: normalizedTag,
         number_of_questions: data.number_of_questions,
         quiz_type: data.quiz_type,
         time: data.time,
