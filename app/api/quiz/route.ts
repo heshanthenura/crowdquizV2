@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const { data, error, count } = await supabase
       .from("quizzes")
       .select(
-        "id,title,description,quiz_type,number_of_questions,time, created_at::date",
+        "id,title,description,quiz_type,tag,number_of_questions,time, created_at::date",
         { count: "exact" },
       )
       .or(`title.ilike.%${query}%,description.ilike.%${query}%`)

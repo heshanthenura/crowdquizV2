@@ -3,6 +3,7 @@ export type QuizPreviewCardType = {
   title: string;
   description: string;
   quiz_type: string;
+  tag?: string | null;
   created_at: Date;
   number_of_questions: number;
   time: number;
