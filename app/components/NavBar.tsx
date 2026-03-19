@@ -4,12 +4,19 @@ import { BookOpen, LogIn, LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
+import { getOnlineCount, subscribeToOnlineCount } from "@/app/utils/websocket";
 
 export default function NavBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [, startTransition] = useTransition();
   const { user, loading, signInWithGoogle, signOut } = useAuth();
+  const [onlineCount, setOnlineCount] = useState(getOnlineCount());
+
+  useEffect(() => {
+    const unsubscribe = subscribeToOnlineCount(setOnlineCount);
+    return unsubscribe;
+  }, []);
 
   const isActive = (path: string) => pathname === path;
 
@@ -56,6 +63,10 @@ export default function NavBar() {
             <BookOpen className="w-6 h-6 text-blue-600" />
             <span className="text-xl font-semibold text-gray-900">
               CrowdQuiz
+            </span>
+            <span className="text-green-500 flex items-center gap-1 text-sm">
+              <div className="bg-green-500 text-white w-[10px] h-[10px] rounded-full"></div>
+              {onlineCount}
             </span>
           </Link>
 
