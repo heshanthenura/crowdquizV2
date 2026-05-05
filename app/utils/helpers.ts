@@ -227,7 +227,6 @@ export async function markQuiz(
       correctAnswerId,
       userAnswerId,
       status,
-      explanation: question.explanation,
     };
   });
 

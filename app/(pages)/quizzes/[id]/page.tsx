@@ -150,7 +150,6 @@ export default function QuizPage({
         userAnswers,
         attemptToken.current ?? "",
       );
-      console.log("Mark result:", result);
       setMarkResult(result);
       setShowResults(true);
     } catch (err) {
@@ -353,20 +352,6 @@ export default function QuizPage({
                           );
                         })}
                       </div>
-
-                      {questionResult?.status === "wrong" ||
-                      questionResult?.status === "unanswered"
-                        ? questionResult?.explanation && (
-                            <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200">
-                              <p className="text-sm font-medium text-blue-900 mb-1">
-                                Explanation:
-                              </p>
-                              <p className="text-sm text-blue-800">
-                                {questionResult.explanation}
-                              </p>
-                            </div>
-                          )
-                        : null}
                     </div>
                   );
                 })}
