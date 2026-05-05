@@ -54,7 +54,7 @@ export async function getSessionAccessToken(): Promise<string | null> {
 }
 
 export async function getRecentQuizzes() {
-  const response = await fetch(origin + "/api/quiz/recent");
+  const response = await fetch("/api/quiz/recent");
   const data = await response.json();
   return data as QuizPreviewCardType[];
 }
@@ -72,14 +72,14 @@ export async function listQuizzes(
     tag,
   });
 
-  const res = await fetch(origin + `/api/quiz?${params.toString()}`);
+  const res = await fetch(`/api/quiz?${params.toString()}`);
   if (!res.ok) return;
   const json = await res.json();
   return json as QuizListResponseType;
 }
 
 export async function getQuizTags() {
-  const res = await fetch(origin + "/api/quiz/tags");
+  const res = await fetch("/api/quiz/tags");
   if (!res.ok) return [];
   const json = await res.json();
   return json as string[];
@@ -112,7 +112,7 @@ export async function createMCQQuiz(params: {
     questions: questions ?? [],
   };
 
-  const res = await fetch(origin + `/api/quiz/new`, {
+  const res = await fetch("/api/quiz/new", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
