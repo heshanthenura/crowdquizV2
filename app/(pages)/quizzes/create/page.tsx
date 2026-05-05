@@ -32,7 +32,8 @@ export default function AddQuizzesPage() {
       { "option": "Madrid", "is_correct": false },
       { "option": "Paris", "is_correct": true },
       { "option": "Rome", "is_correct": false }
-    ]
+    ],
+    explanation: "Paris is the capital city of France."
   }]`;
 
   const getValidMessage = (count?: number) => {
