@@ -65,8 +65,8 @@ export async function POST(request: NextRequest) {
           console.error("Failed to insert attempt history", error);
         }
       }
-    } catch {
-      // Silently ignore invalid attempt token
+    } catch (err) {
+      console.error("Failed to decode attempt token", err);
     }
   }
   return NextResponse.json({ data: result });

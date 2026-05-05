@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
     if (userError || !user) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
+
+    console.log(user.role);
     const authorEmail = user.email;
     const authorName = user.user_metadata?.full_name || user.email;
     const normalizedTag = data.tag?.trim()
