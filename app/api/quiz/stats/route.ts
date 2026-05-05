@@ -1,7 +1,7 @@
 import { getPlatformStats } from "@/app/utils/dbutils";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const { data, error } = await getPlatformStats();
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

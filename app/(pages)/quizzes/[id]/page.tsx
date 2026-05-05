@@ -2,7 +2,6 @@
 
 import MCQOptionCard from "@/app/components/MCQOptionCard";
 import NavBar from "@/app/components/NavBar";
-import { useAuth } from "@/app/context/AuthContext";
 import { MCQMarkResult, MCQQuizType } from "@/app/types/types";
 import { handleFinish } from "@/app/utils/helpers";
 import { Clock, FileQuestion } from "lucide-react";

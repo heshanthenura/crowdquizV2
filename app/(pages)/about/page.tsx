@@ -28,7 +28,7 @@ export default function AboutPage() {
                   CrowdQuiz is dedicated to making learning interactive and
                   engaging through well-designed quizzes. We believe that
                   testing knowledge should be both effective and enjoyable,
-                  which is why we've created a platform with a clean, modern
+                  which is why we&apos;ve created a platform with a clean, modern
                   interface that focuses on the learning experience.
                 </p>
               </section>
