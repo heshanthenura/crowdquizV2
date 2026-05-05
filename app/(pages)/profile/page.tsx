@@ -20,14 +20,13 @@ export default function ProfilePage() {
     if (!loading && !user) {
       router.push("/unauthenticated");
     }
-    console.log("User in ProfilePage:", user);
   }, [user, loading, router]);
 
   useEffect(() => {
     if (user && !loading && !quizzes.length) {
       fetchMyQuizzes();
     }
-  }, [user, loading]);
+  }, [user, loading, quizzes.length]);
 
   const fetchMyQuizzes = async () => {
     setQuizzesLoading(true);
@@ -116,7 +115,6 @@ export default function ProfilePage() {
 
   if (loading) return <div>Loading...</div>;
   if (!user) return null;
-  console.log(user);
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col gap-[10px]">
       <NavBar />

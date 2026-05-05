@@ -12,9 +12,14 @@ export async function GET(
         ...data,
         questions: data.questions.map((question) => ({
           ...question,
-          answers: question.answers.map(
-            ({ is_correct: _isCorrect, ...rest }) => rest,
-          ),
+          answers: question.answers.map((answer) => {
+            return {
+              id: answer.id,
+              created_at: answer.created_at,
+              question_id: answer.question_id,
+              option: answer.option,
+            };
+          }),
         })),
       }
     : null;
