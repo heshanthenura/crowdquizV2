@@ -10,7 +10,7 @@ export default function NavBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [, startTransition] = useTransition();
-  const { user, loading, signInWithGoogle, signOut } = useAuth();
+  const { user, loading, isAdmin, signInWithGoogle, signOut } = useAuth();
   const [onlineCount, setOnlineCount] = useState(getOnlineCount());
 
   useEffect(() => {
@@ -27,7 +27,10 @@ export default function NavBar() {
     { href: "/quizzes/create", label: "Create Quiz", requireAuth: true },
     { href: "/about", label: "About" },
     { href: "/profile", label: "Profile", requireAuth: true },
-  ].filter((link) => !link.requireAuth || user);
+    { href: "/admin", label: "Admin", requireAuth: true, isAdminOnly: true },
+  ]
+    .filter((link) => !link.requireAuth || user)
+    .filter((link) => !link.isAdminOnly || (user && isAdmin));
 
   useEffect(() => {
     startTransition(() => {

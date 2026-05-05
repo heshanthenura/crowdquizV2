@@ -73,9 +73,8 @@ export default function QuizPage({
   const handelStartQuiz = async () => {
     if (!quiz) return;
 
-    const response = await fetch(origin + `/api/quiz/start`);
+    const response = await fetch("/api/quiz/start");
     const body = await response.json();
-    console.log("Start quiz response:", body.token);
     attemptToken.current = body.token;
 
     setIsQuizStarted(true);
