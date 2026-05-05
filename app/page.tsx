@@ -7,9 +7,6 @@ import QuizPreviewCard from "@/app/components/QuizPreviewCard";
 import { type QuizPreviewCardType } from "@/app/types/types";
 import { getRecentQuizzes } from "@/app/utils/helpers";
 import { getPlatformStats } from "@/app/utils/dbutils";
-import Script from "next/script";
-import AddBanner from "./components/AdBanner";
-import AdBanner from "./components/AdBanner";
 export default function Home() {
   const [quizzes, setQuizzes] = useState<QuizPreviewCardType[]>([]);
   const [stats, setStats] = useState({
@@ -61,11 +58,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <AdBanner
-        desktopKey="448cb8e8185cc672ab858e654b614779"
-        mobileKey="6eaf505d4d02224d1f3c6c5be49fb5c2"
-      />
-
       <section className="py-16 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
