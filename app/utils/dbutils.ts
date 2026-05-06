@@ -40,6 +40,7 @@ export async function getMCQQuiz(id: number): Promise<{
     type: "MCQ" as const,
     marks: q.marks,
     question: q.question,
+    explanation: q.explanation || null,
     answers: mcqOptions?.filter((opt) => opt.question_id === q.id) || [],
   }));
 

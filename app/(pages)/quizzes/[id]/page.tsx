@@ -151,6 +151,7 @@ export default function QuizPage({
         userAnswers,
         attemptToken.current ?? "",
       );
+      console.log("Mark result:", result);
       setMarkResult(result);
       setShowResults(true);
     } catch (err) {
@@ -352,6 +353,13 @@ export default function QuizPage({
                             </div>
                           );
                         })}
+                        {questionResult?.explanation ? (
+                          <div className="mt-3 p-3 rounded-lg bg-gray-50 border-l-4 border-blue-500 text-sm text-gray-700">
+                            <div className="mt-1 whitespace-pre-wrap">
+                              {questionResult.explanation}
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   );

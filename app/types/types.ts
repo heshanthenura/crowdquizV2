@@ -34,6 +34,7 @@ export type MCQQuestionType = {
   marks: number | null;
   question: string;
   answers: MCQOptionType[];
+  explanation?: string | null;
 };
 
 export type MCQQuizType = {
@@ -57,6 +58,7 @@ export type MCQMarkAnswerResult = {
   correctAnswerId: number | null;
   userAnswerId: number | null;
   status: MCQMarkStatus;
+  explanation?: string | null;
 };
 
 export type MCQMarkResult = {

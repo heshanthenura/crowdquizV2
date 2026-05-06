@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
           quiz_id: quizId,
           type: "MCQ",
           question: question.question,
+          explanation: question.explanation || null,
         })
         .select();
 
