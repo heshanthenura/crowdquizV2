@@ -58,6 +58,7 @@ export type MCQMarkAnswerResult = {
   correctAnswerId: number | null;
   userAnswerId: number | null;
   status: MCQMarkStatus;
+  explanation?: string | null;
 };
 
 export type MCQMarkResult = {
