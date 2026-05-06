@@ -34,6 +34,7 @@ export type MCQQuestionType = {
   marks: number | null;
   question: string;
   answers: MCQOptionType[];
+  explanation?: string | null;
 };
 
 export type MCQQuizType = {
