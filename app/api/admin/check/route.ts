@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
+import { checkAdmin } from "@/app/utils/serverHelpers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -18,11 +19,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
-  const { data: role, error: roleError } = await supabaseAdmin
-    .from("profiles")
-    .select("role")
-    .eq("user_id", data.user.id)
-    .single();
+  const { isAdmin, error: roleError } = await checkAdmin(data.user.id);
 
   if (roleError) {
     console.error("Error fetching user role:", roleError);
@@ -34,10 +31,10 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({
     message: "ok",
-    isAdmin: role.role === "ADMIN",
+    isAdmin: isAdmin,
     user: {
       id: data.user.id,
-      role: role.role,
+      role: "ADMIN",
     },
   });
 }
