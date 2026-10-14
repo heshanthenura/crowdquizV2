@@ -1,25 +1,12 @@
-import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
+import { requireUser } from "@/app/lib/auth";
 import { checkAdmin } from "@/app/utils/serverHelpers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
+  const auth = await requireUser(request);
+  if ("response" in auth) return auth.response;
 
-  const token = authHeader?.startsWith("Bearer ")
-    ? authHeader.split(" ")[1]
-    : null;
-
-  if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const { data, error } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !data.user) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
-
-  const { isAdmin, error: roleError } = await checkAdmin(data.user.id);
+  const { isAdmin, error: roleError } = await checkAdmin(auth.user.id);
 
   if (roleError) {
     console.error("Error fetching user role:", roleError);
@@ -33,7 +20,7 @@ export async function POST(request: NextRequest) {
     message: "ok",
     isAdmin: isAdmin,
     user: {
-      id: data.user.id,
+      id: auth.user.id,
       role: "ADMIN",
     },
   });

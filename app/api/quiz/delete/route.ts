@@ -1,19 +1,12 @@
+import { requireUser } from "@/app/lib/auth";
+import { jsonError } from "@/app/lib/http";
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
-type UserResult =
-  | { user: { email?: string | null } }
-  | { response: NextResponse };
 type QuizResult =
   | { quiz: { id: number; author_email: string | null } }
   | { response: NextResponse };
 type QuestionIdsResult = { questionIds: number[] } | { response: NextResponse };
-
-const jsonError = (message: string, status: number) =>
-  NextResponse.json({ error: message }, { status });
-
-const getAuthToken = (request: NextRequest) =>
-  request.headers.get("authorization")?.split(" ")[1] ?? null;
 
 const parseQuizId = async (request: NextRequest): Promise<number | null> => {
   let body: { id?: number } = {};
@@ -29,19 +22,6 @@ const parseQuizId = async (request: NextRequest): Promise<number | null> => {
   }
 
   return Number(quizId);
-};
-
-const requireUser = async (token: string): Promise<UserResult> => {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (userError || !user) {
-    return { response: jsonError("Invalid token", 401) };
-  }
-
-  return { user };
 };
 
 const fetchQuiz = async (quizId: number): Promise<QuizResult> => {
@@ -134,15 +114,10 @@ const deleteQuiz = async (quizId: number, authorEmail: string | null) => {
 };
 
 const deleteQuizForUser = async (
-  token: string,
+  userResult: { user: { email?: string | null } },
   quizId: number,
 ): Promise<NextResponse> => {
   try {
-    const userResult = await requireUser(token);
-    if ("response" in userResult) {
-      return userResult.response;
-    }
-
     const quizResult = await fetchQuiz(quizId);
     if ("response" in quizResult) {
       return quizResult.response;
@@ -186,15 +161,13 @@ const deleteQuizForUser = async (
 };
 
 export async function DELETE(request: NextRequest) {
-  const token = getAuthToken(request);
-  if (!token) {
-    return jsonError("Unauthorized", 401);
-  }
+  const auth = await requireUser(request);
+  if ("response" in auth) return auth.response;
 
   const quizId = await parseQuizId(request);
   if (quizId === null) {
     return jsonError("Quiz id is required", 400);
   }
 
-  return deleteQuizForUser(token, quizId);
+  return deleteQuizForUser(auth, quizId);
 }

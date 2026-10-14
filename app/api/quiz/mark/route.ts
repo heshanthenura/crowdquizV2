@@ -1,26 +1,9 @@
 import { getMCQQuiz } from "@/app/utils/dbutils";
 import { markQuiz } from "@/app/utils/helpers";
 import { decrypt } from "@/app/utils/crypto";
+import { getOptionalUser } from "@/app/lib/auth";
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
-
-const getVerifiedUserId = async (
-  request: NextRequest,
-): Promise<string | null> => {
-  const authHeader = request.headers.get("authorization") ?? "";
-  const token = authHeader.startsWith("Bearer ")
-    ? authHeader.slice("Bearer ".length)
-    : "";
-
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error,
-  } = await supabaseAdmin.auth.getUser(token);
-  if (error || !user) return null;
-  return user.id;
-};
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -40,7 +23,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const userId = await getVerifiedUserId(request);
+  const userId = (await getOptionalUser(request))?.id ?? null;
   const result = await markQuiz(quiz.data, answers, body?.attemptToken, userId);
 
   if (userId && body?.attemptToken) {
