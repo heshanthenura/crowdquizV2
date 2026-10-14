@@ -1,6 +1,14 @@
 import NavBar from "@/app/components/NavBar";
 import Image from "next/image";
 import { Github, Instagram, Linkedin, Youtube } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Learn about CrowdQuiz, a modern community quiz platform, and the developer behind it.",
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   return (

@@ -1,25 +1,16 @@
 import { MCQOptionType, MCQQuizType } from "@/app/types/types";
+import { requireUser } from "@/app/lib/auth";
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const data: MCQQuizType = await request.json();
-  const token = request.headers.get("authorization")?.split(" ")[1];
+  const auth = await requireUser(request);
+  if ("response" in auth) return auth.response;
+  const { user } = auth;
 
-  if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const data: MCQQuizType = await request.json();
 
   try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabaseAdmin.auth.getUser(token);
-
-    if (userError || !user) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-    }
-
     console.log(user.role);
     const authorEmail = user.email;
     const authorName = user.user_metadata?.full_name || user.email;

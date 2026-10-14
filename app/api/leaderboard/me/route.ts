@@ -1,26 +1,15 @@
+import { requireUser } from "@/app/lib/auth";
 import { supabaseAdmin } from "@/app/utils/supabaseAdmin";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const token = request.headers.get("authorization")?.split(" ")[1];
-
-  if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (userError || !user) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
+  const auth = await requireUser(request);
+  if ("response" in auth) return auth.response;
 
   const { data: me, error: meError } = await supabaseAdmin
     .from("leaderboard_with_users")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("user_id", auth.user.id)
     .single();
 
   if (meError && meError.code !== "PGRST116") {

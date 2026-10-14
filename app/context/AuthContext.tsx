@@ -52,10 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo:
-          globalThis.window === undefined
-            ? undefined
-            : `${globalThis.location.origin}/auth/callback`,
+        redirectTo: `${globalThis.location.origin}/auth/callback`,
       },
     });
   }, []);

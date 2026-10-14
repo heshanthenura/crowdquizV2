@@ -253,3 +253,27 @@ export async function markQuiz(
     results,
   };
 }
+
+export async function checkAdmin(
+  userId: string,
+): Promise<{ isAdmin: boolean; error?: string }> {
+  const response = await fetch("/api/admin/check", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${await getSessionAccessToken()}`,
+    },
+    body: JSON.stringify({ userId }),
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    return {
+      isAdmin: false,
+      error: payload?.error || "Failed to check admin status",
+    };
+  }
+
+  const payload = await response.json();
+  return { isAdmin: payload.isAdmin };
+}
