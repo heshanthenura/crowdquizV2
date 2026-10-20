@@ -34,6 +34,7 @@ export type MCQQuestionType = {
   marks: number | null;
   question: string;
   answers: MCQOptionType[];
+  multiple?: boolean;
   explanation?: string | null;
 };
 
@@ -51,13 +52,14 @@ export type MCQQuizType = {
   questions: MCQQuestionType[];
 };
 
-export type MCQMarkStatus = "correct" | "wrong" | "unanswered";
+export type MCQMarkStatus = "correct" | "partial" | "wrong" | "unanswered";
 
 export type MCQMarkAnswerResult = {
   questionId: number;
-  correctAnswerId: number | null;
-  userAnswerId: number | null;
+  correctAnswerIds: number[];
+  userAnswerIds: number[];
   status: MCQMarkStatus;
+  score: number;
   explanation?: string | null;
 };
 
@@ -66,8 +68,10 @@ export type MCQMarkResult = {
   userId?: string | null;
   totalQuestions: number;
   correctCount: number;
+  partialCount: number;
   wrongCount: number;
   unansweredCount: number;
+  earnedScore: number;
   scorePercentage: number;
   timeSpentSeconds?: number | null;
   results: MCQMarkAnswerResult[];

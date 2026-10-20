@@ -20,7 +20,7 @@ export default function QuizPage({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
+  const [userAnswers, setUserAnswers] = useState<Record<number, number[]>>({});
   const [showResults, setShowResults] = useState(false);
   const [markResult, setMarkResult] = useState<MCQMarkResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -83,11 +83,18 @@ export default function QuizPage({
   };
 
   const handleAnswerSelect = useCallback(
-    (questionId: number, answerId: number) => {
-      setUserAnswers((prev) => ({
-        ...prev,
-        [questionId]: answerId,
-      }));
+    (questionId: number, answerId: number, multiple: boolean) => {
+      setUserAnswers((prev) => {
+        if (!multiple) return { ...prev, [questionId]: [answerId] };
+
+        const current = prev[questionId] ?? [];
+        const next = current.includes(answerId)
+          ? current.filter((id) => id !== answerId)
+          : [...current, answerId];
+        const updated = { ...prev, [questionId]: next };
+        if (next.length === 0) delete updated[questionId];
+        return updated;
+      });
     },
     [],
   );
@@ -236,8 +243,10 @@ export default function QuizPage({
                     {markResult?.scorePercentage ?? 0}%
                   </div>
                   <p className="text-gray-600">
-                    You got {markResult?.correctCount ?? 0} out of{" "}
-                    {quiz.questions.length} questions correct
+                    You scored{" "}
+                    {Number((markResult?.earnedScore ?? 0).toFixed(2))} out of{" "}
+                    {quiz.questions.length} points (
+                    {markResult?.correctCount ?? 0} fully correct)
                   </p>
                   {markResult?.timeSpentSeconds !== null &&
                     markResult?.timeSpentSeconds !== undefined && (
@@ -247,12 +256,18 @@ export default function QuizPage({
                     )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                     <div className="text-2xl font-bold text-green-700">
                       {markResult?.correctCount ?? 0}
                     </div>
                     <div className="text-sm text-green-700">✓ Correct</div>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-blue-700">
+                      {markResult?.partialCount ?? 0}
+                    </div>
+                    <div className="text-sm text-blue-700">◐ Partial</div>
                   </div>
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
                     <div className="text-2xl font-bold text-red-700">
@@ -289,12 +304,13 @@ export default function QuizPage({
                   const questionResult = markResult?.results.find(
                     (r) => r.questionId === question.id,
                   );
-                  const userAnswerId = questionResult?.userAnswerId ?? null;
-                  const correctAnswerId =
-                    questionResult?.correctAnswerId ??
-                    question.answers.find((a) => a.is_correct)?.id ??
-                    null;
-                  const isUnanswered = userAnswerId === null;
+                  const userAnswerIds = questionResult?.userAnswerIds ?? [];
+                  const correctAnswerIds =
+                    questionResult?.correctAnswerIds ??
+                    question.answers
+                      .filter((a) => a.is_correct)
+                      .map((a) => a.id);
+                  const isUnanswered = userAnswerIds.length === 0;
 
                   return (
                     <div
@@ -312,8 +328,12 @@ export default function QuizPage({
 
                       <div className="space-y-2 ml-8">
                         {question.answers.map((answer) => {
-                          const isUserAnswer = userAnswerId === answer.id;
-                          const isCorrect = correctAnswerId === answer.id;
+                          const isUserAnswer = userAnswerIds.includes(
+                            answer.id,
+                          );
+                          const isCorrect = correctAnswerIds.includes(
+                            answer.id,
+                          );
 
                           let answerClassName: string;
                           let labelText = "";
@@ -353,6 +373,13 @@ export default function QuizPage({
                             </div>
                           );
                         })}
+                        {question.multiple &&
+                        questionResult &&
+                        !isUnanswered ? (
+                          <p className="text-sm font-medium text-gray-700">
+                            Score: {Number(questionResult.score.toFixed(2))} / 1
+                          </p>
+                        ) : null}
                         {questionResult?.explanation ? (
                           <div className="mt-3 p-3 rounded-lg bg-gray-50 border-l-4 border-blue-500 text-sm text-gray-700">
                             <div className="mt-1 whitespace-pre-wrap">
@@ -432,7 +459,7 @@ export default function QuizPage({
                   key={question.id}
                   question={question}
                   qIndex={qIndex}
-                  selectedOption={userAnswers[question.id] ?? null}
+                  selectedOptions={userAnswers[question.id] ?? []}
                   onSelect={handleAnswerSelect}
                 />
               ))}

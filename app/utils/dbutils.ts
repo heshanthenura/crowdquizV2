@@ -33,16 +33,20 @@ export async function getMCQQuiz(id: number): Promise<{
     return { data: null, error: optionsError };
   }
 
-  const questionsWithOptions = questions.map((q) => ({
-    id: q.id,
-    created_at: q.created_at,
-    quiz_id: q.quiz_id,
-    type: "MCQ" as const,
-    marks: q.marks,
-    question: q.question,
-    explanation: q.explanation || null,
-    answers: mcqOptions?.filter((opt) => opt.question_id === q.id) || [],
-  }));
+  const questionsWithOptions = questions.map((q) => {
+    const answers = mcqOptions?.filter((opt) => opt.question_id === q.id) || [];
+    return {
+      id: q.id,
+      created_at: q.created_at,
+      quiz_id: q.quiz_id,
+      type: "MCQ" as const,
+      marks: q.marks,
+      question: q.question,
+      explanation: q.explanation || null,
+      answers,
+      multiple: answers.filter((opt) => opt.is_correct).length > 1,
+    };
+  });
 
   const mcqQuiz: MCQQuizType = {
     id: quizData.id.toString(),
