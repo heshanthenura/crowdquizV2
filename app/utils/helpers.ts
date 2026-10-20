@@ -1,4 +1,5 @@
 import {
+  MCQMarkStatus,
   MCQMarkResult,
   MCQQuizType,
   QuizListResponseType,
@@ -160,7 +161,7 @@ export async function deleteQuizById(
 
 export async function handleFinish(
   quizId: number,
-  userAnswers: Record<number, number>,
+  userAnswers: Record<number, number[]>,
   attemptToken: string,
 ) {
   const token = await getSessionAccessToken();
@@ -188,7 +189,7 @@ export async function handleFinish(
 
 export async function markQuiz(
   quiz: MCQQuizType,
-  userAnswers: Record<number, number>,
+  userAnswers: Record<number, number[]>,
   attemptToken: string | undefined,
   userId: string | null,
 ): Promise<MCQMarkResult> {
@@ -209,36 +210,65 @@ export async function markQuiz(
   }
 
   const results = quiz.questions.map((question) => {
-    const correctAnswer = question.answers.find((opt) => opt.is_correct);
-    const correctAnswerId = correctAnswer?.id ?? null;
-    const userAnswerId = userAnswers[question.id] ?? null;
-    let status: "correct" | "wrong" | "unanswered";
+    const correctAnswerIds = question.answers
+      .filter((opt) => opt.is_correct)
+      .map((opt) => opt.id);
+    const rawAnswer: unknown = userAnswers[question.id];
+    const userAnswerIds = (
+      Array.isArray(rawAnswer) ? rawAnswer : [rawAnswer]
+    ).filter((id): id is number => typeof id === "number");
+    const isExactMatch =
+      correctAnswerIds.length > 0 &&
+      userAnswerIds.length === correctAnswerIds.length &&
+      correctAnswerIds.every((id) => userAnswerIds.includes(id));
+    let status: MCQMarkStatus;
+    let score = isExactMatch ? 1 : 0;
 
-    if (userAnswerId === null) {
+    if (userAnswerIds.length === 0) {
       status = "unanswered";
-    } else if (correctAnswerId !== null && userAnswerId === correctAnswerId) {
+    } else if (isExactMatch) {
       status = "correct";
     } else {
       status = "wrong";
+      if (question.multiple) {
+        // checkbox questions: +1/correct per right pick, -1/wrong per bad pick
+        const wrongCount = question.answers.length - correctAnswerIds.length;
+        const rightPicked = userAnswerIds.filter((id) =>
+          correctAnswerIds.includes(id),
+        ).length;
+        const wrongPicked = userAnswerIds.length - rightPicked;
+        score = Math.min(
+          1,
+          Math.max(
+            0,
+            rightPicked / correctAnswerIds.length -
+              (wrongCount ? wrongPicked / wrongCount : 0),
+          ),
+        );
+        if (score > 0) status = "partial";
+      }
     }
 
     return {
       questionId: question.id,
-      correctAnswerId,
-      userAnswerId,
+      correctAnswerIds,
+      userAnswerIds,
       status,
+      score,
       explanation: question.explanation ?? null,
     };
   });
 
   const correctCount = results.filter((r) => r.status === "correct").length;
+  const partialCount = results.filter((r) => r.status === "partial").length;
   const wrongCount = results.filter((r) => r.status === "wrong").length;
   const unansweredCount = results.filter(
     (r) => r.status === "unanswered",
   ).length;
   const totalQuestions = results.length;
+  const earnedScore = results.reduce((sum, r) => sum + r.score, 0);
   const scorePercentage = totalQuestions
-    ? Math.round((correctCount / totalQuestions) * 100)
+    ? Math.round((earnedScore / totalQuestions) * 100)
     : 0;
 
   return {
@@ -246,8 +276,10 @@ export async function markQuiz(
     userId,
     totalQuestions,
     correctCount,
+    partialCount,
     wrongCount,
     unansweredCount,
+    earnedScore,
     scorePercentage,
     timeSpentSeconds,
     results,

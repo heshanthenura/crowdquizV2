@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const quizId = Number(body?.quizId);
-  const answers = (body?.answers ?? {}) as Record<number, number>;
+  const answers = (body?.answers ?? {}) as Record<number, number[]>;
 
   if (!Number.isFinite(quizId)) {
     return NextResponse.json({ error: "Invalid quizId" }, { status: 400 });
@@ -37,8 +37,13 @@ export async function POST(request: NextRequest) {
         const { error } = await supabaseAdmin.from("attempts").insert({
           user_id: userId,
           quiz_id: quizId,
-          correct_count: result.correctCount,
-          wrong_count: result.wrongCount,
+          // fractional so the XP trigger credits partial answers: each
+          // question contributes `score` to correct and the rest to wrong
+          correct_count: result.earnedScore,
+          wrong_count: Math.max(
+            0,
+            result.totalQuestions - result.unansweredCount - result.earnedScore,
+          ),
           unanswere_count: result.unansweredCount,
           time_spent_seconds: timeSpentSeconds,
           started_at: startMs,
