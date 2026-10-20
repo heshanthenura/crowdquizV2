@@ -5,6 +5,7 @@ import { supabase } from "@/app/utils/supabase";
 import validateJSON from "@/app/utils/validateJSON";
 import { createMCQQuiz } from "@/app/utils/helpers";
 import { Facebook, LinkIcon, Twitter } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -274,8 +275,17 @@ export default function AddQuizzesPage() {
                 Questions JSON *
               </label>
               <p className="text-sm text-gray-500 mb-3">
-                Paste your questions in JSON format. Each question should have:
-                question, options (array), and correctAnswer (index).
+                Paste your questions in JSON format. Each question needs a
+                question and an answers array of option and is_correct items.
+                See the{" "}
+                <Link
+                  href="/docs"
+                  className="text-blue-600 hover:underline"
+                  target="_blank"
+                >
+                  format guide
+                </Link>{" "}
+                for an example and an AI prompt.
               </p>
               <textarea
                 placeholder={placeholderJSON}
